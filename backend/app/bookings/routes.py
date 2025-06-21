@@ -1,89 +1,87 @@
 # app/bookings/routes.py
-
 from flask import Blueprint, request, jsonify
+from datetime import datetime
+from sqlalchemy.exc import IntegrityError
+
 from app.extensions import db
 from app.models import TimeSlot, Booking
-from datetime import datetime
 
-booking_bp = Blueprint('bookings', __name__, url_prefix='/api/bookings')
+booking_bp = Blueprint("bookings", __name__, url_prefix="/api/bookings")
 
-@booking_bp.route('/<int:slot_id>', methods=['POST'])
-def book_slot(slot_id):
-    data = request.get_json()
-    name = data.get('name')
-    email = data.get('email')
 
+# ───────────────────────────────────────────────
+# 1. Create a booking  (public – no auth)
+#    POST /api/bookings/<slot_id>
+# ───────────────────────────────────────────────
+@booking_bp.route("/<int:slot_id>", methods=["POST"])
+def book_slot(slot_id: int):
+    """Book a specific time-slot by ID."""
+    data = request.get_json() or {}
+    name = data.get("name")
+    email = data.get("email")
+
+    # Basic validation
     if not name or not email:
-        return jsonify({'error': 'Name and email are required'}), 400
+        return jsonify({"error": "Name and email are required"}), 400
 
-    slot = TimeSlot.query.get(slot_id)
-    if not slot:
-        return jsonify({'error': 'Slot not found'}), 404
+    # Fetch slot (and event via relationship if needed)
+    slot: TimeSlot | None = TimeSlot.query.get(slot_id)
+    if slot is None:
+        return jsonify({"error": "Time slot not found"}), 404
 
-    existing_booking = Booking.query.filter_by(slot_id=slot_id, email=email).first()
-    if existing_booking:
-        return jsonify({'error': 'You have already booked this slot'}), 409
-
+    # Check capacity
     if len(slot.bookings) >= slot.max_bookings:
-        return jsonify({'error': 'Slot is fully booked'}), 400
+        return jsonify({"error": "This time slot is fully booked"}), 409
 
-    new_booking = Booking(
+    # Prevent duplicate booking for same slot & email
+    if Booking.query.filter_by(slot_id=slot_id, email=email).first():
+        return jsonify({"error": "You have already booked this slot"}), 409
+
+    # Create booking
+    booking = Booking(
         slot_id=slot_id,
         name=name,
         email=email,
-        created_at=datetime.utcnow()
+        created_at=datetime.utcnow(),
+    )
+    db.session.add(booking)
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Could not save booking, try again"}), 500
+
+    return jsonify({"message": "Booking successful!"}), 201
+
+
+# ───────────────────────────────────────────────
+# 2. (Optional) List bookings for an e-mail
+#    GET /api/bookings?email=someone@example.com
+# ───────────────────────────────────────────────
+@booking_bp.route("/", methods=["GET"])
+def list_bookings_by_email():
+    """Return past bookings filtered by email (optional feature)."""
+    email = request.args.get("email")
+    if not email:
+        return jsonify({"error": "Email query-param is required"}), 400
+
+    bookings = (
+        Booking.query.join(TimeSlot)
+        .filter(Booking.email == email)
+        .order_by(Booking.created_at.desc())
+        .all()
     )
 
-    db.session.add(new_booking)
-    db.session.commit()
+    result = [
+        {
+            "booking_id": b.id,
+            "event_id": b.slot.event_id,
+            "slot_id": b.slot_id,
+            "datetime_utc": b.slot.datetime_utc.isoformat(),
+            "booked_at": b.created_at.isoformat(),
+        }
+        for b in bookings
+    ]
 
-    return jsonify({'message': 'Booking successful'})
-
-# Book a time slot
-# @booking_bp.route("/<event_uuid>/bookings", methods=["POST"])
-# def book_slot(event_uuid):
-#     data = request.get_json()
-#     slot_id = data.get("slot_id")
-#     name = data.get("name")
-#     email = data.get("email")
-#
-#     if not all([slot_id, name, email]):
-#         return jsonify({"message": "Missing fields"}), 400
-#
-#     slot = TimeSlot.query.filter_by(id=slot_id).first()
-#     if not slot:
-#         return jsonify({"message": "Invalid slot"}), 404
-#
-#     # Prevent duplicate booking
-#     existing = Booking.query.filter_by(slot_id=slot_id, email=email).first()
-#     if existing:
-#         return jsonify({"message": "You have already booked this slot."}), 400
-#
-#     if len(slot.bookings) >= slot.max_bookings:
-#         return jsonify({"message": "This slot is fully booked."}), 400
-#
-#     booking = Booking(
-#         slot_id=slot_id,
-#         name=name,
-#         email=email,
-#         created_at=datetime.utcnow()
-#     )
-#
-#     db.session.add(booking)
-#     db.session.commit()
-#
-#     return jsonify({"message": "Booking successful!"}), 201
-#
-# # Optional: View bookings by email
-# @booking_bp.route("/user/<email>", methods=["GET"])
-# def get_user_bookings(email):
-#     bookings = Booking.query.filter_by(email=email).order_by(Booking.created_at.desc()).all()
-#     result = []
-#     for booking in bookings:
-#         result.append({
-#             "slot_id": booking.slot_id,
-#             "event_id": booking.slot.event_id,
-#             "datetime_utc": booking.slot.datetime_utc.isoformat(),
-#             "created_at": booking.created_at.isoformat()
-#         })
-#     return jsonify(result), 200
+    return jsonify({"bookings": result})

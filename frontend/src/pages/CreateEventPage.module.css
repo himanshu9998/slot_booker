@@ -1,0 +1,64 @@
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fefefe;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.heading {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 25px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+.subheading {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.slotRow {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.addButton,
+.submitButton {
+  padding: 10px 16px;
+  font-size: 16px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #0077cc;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover,
+.submitButton:hover {
+  background-color: #005fa3;
+}

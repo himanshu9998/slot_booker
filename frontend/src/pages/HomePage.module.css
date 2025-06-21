@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  background: linear-gradient(to right, #f9f9f9, #eef3f8);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.box {
+  text-align: center;
+  padding: 50px;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  width: 90%;
+}
+
+.title {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.brand {
+  color: #0077cc;
+}
+
+.description {
+  font-size: 18px;
+  margin-bottom: 40px;
+  color: #555;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 12px 30px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.primaryButton {
+  background-color: #0077cc;
+  color: white;
+}
+
+.primaryButton:hover {
+  background-color: #005fa3;
+}
+
+.secondaryButton {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.secondaryButton:hover {
+  background-color: #c6c6c6;
+}

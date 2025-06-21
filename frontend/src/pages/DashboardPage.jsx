@@ -1,18 +1,30 @@
 // src/pages/DashboardPage.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./DashboardPage.module.css";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
 
   const handleCreateEvent = () => {
-    navigate("/create"); // You can customize this route
+    navigate("/create");
+  };
+
+  const handlePublicEvent = () => {
+    navigate("/public");
   };
 
   return (
-    <div>
-      <h1>Welcome to your Dashboard!</h1>
-      <button onClick={handleCreateEvent}>Create New Event</button>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Welcome to your Dashboard!</h1>
+      <div className={styles.buttonList}>
+        <button className={styles.button} onClick={handleCreateEvent}>
+          Create New Event
+        </button>
+        <button className={styles.button} onClick={handlePublicEvent}>
+          Active Events
+        </button>
+      </div>
     </div>
   );
 };

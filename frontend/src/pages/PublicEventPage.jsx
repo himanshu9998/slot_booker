@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import styles from './PublicEventsPage.module.css';
 
 function PublicEventsPage() {
   const [events, setEvents] = useState([]);
@@ -11,12 +12,15 @@ function PublicEventsPage() {
   }, []);
 
   return (
-    <div>
-      <h2>Public Events</h2>
-      <ul>
+    <div className={styles.container}>
+      <h2 className={styles.heading}>Public Events</h2>
+      <ul className={styles.eventList}>
         {events.map(event => (
-          <li key={event.uuid}>
-            <a href={`/event/${event.uuid}`}>{event.title}</a> — {event.description}
+          <li key={event.uuid} className={styles.eventItem}>
+            <a href={`/event/${event.uuid}`} className={styles.eventLink}>
+              {event.title}
+            </a>
+            <span className={styles.eventDescription}> — {event.description}</span>
           </li>
         ))}
       </ul>

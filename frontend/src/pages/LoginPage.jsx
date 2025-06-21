@@ -1,38 +1,62 @@
-// src/pages/LoginPage.jsx
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import styles from './LoginPage.module.css';
 
 const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setMessage('');
 
-    const data = await response.json();
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+        email,
+        password,
+      });
 
-    if (response.ok) {
-      // Optional: store token in localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      alert("Login successful!");
-      navigate("/dashboard"); // 🔁 Redirect to dashboard
-    } else {
-      alert(data.error || "Login failed");
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err);
+      setMessage(err.response?.data?.error || 'Login failed');
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
+    <div className={styles.container}>
+      <form className={styles.card} onSubmit={handleLogin}>
+        <h2 className={styles.title}>Log In</h2>
+
+        <input
+          className={styles.input}
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <input
+          className={styles.input}
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button className={styles.button} type="submit">Log In</button>
+
+        {message && <p className={styles.message}>{message}</p>}
+      </form>
     </div>
   );
 };

@@ -1,45 +1,72 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import styles from './SignupPage.module.css';
 
-const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+const SignupPage = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSignup = async () => {
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Signup failed');
-      }
-
-      alert('Signup successful!');
-      console.log(data);
-
-      // OPTIONAL: Redirect to login or home page
-      // window.location.href = '/login';
-
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, formData);
+      setMessage('Signup successful! Redirecting...');
+      setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
-      alert(err.message);
-      console.error('Signup error:', err);
+      console.error(err);
+      setMessage(err.response?.data?.error || 'Signup failed');
     }
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
-      <input placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
-      <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      <button onClick={handleSignup}>Sign Up</button>
+    <div className={styles.container}>
+      <form className={styles.card} onSubmit={handleSubmit}>
+        <h2 className={styles.title}>Sign Up</h2>
+
+        <input
+          className={styles.input}
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          className={styles.input}
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          className={styles.input}
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+
+        <button className={styles.button} type="submit">Create Account</button>
+
+        {message && <p className={styles.message}>{message}</p>}
+      </form>
     </div>
   );
 };
 
-export default Signup;
+export default SignupPage;

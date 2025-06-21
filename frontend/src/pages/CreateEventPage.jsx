@@ -1,6 +1,6 @@
-// src/pages/CreateEventPage.jsx
 import { useState } from "react";
 import axios from "axios";
+import styles from "./CreateEventPage.module.css";
 
 function CreateEventPage() {
   const [title, setTitle] = useState("");
@@ -35,23 +35,41 @@ function CreateEventPage() {
   };
 
   return (
-    <div>
-      <h2>Create New Event</h2>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-        <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-        <input placeholder="Timezone" value={timezone} readOnly />
+    <div className={styles.container}>
+      <h2 className={styles.heading}>Create New Event</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <input
+          className={styles.input}
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <textarea
+          className={styles.textarea}
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <input
+          className={styles.input}
+          placeholder="Timezone"
+          value={timezone}
+          readOnly
+        />
 
-        <h3>Time Slots</h3>
+        <h3 className={styles.subheading}>Time Slots</h3>
         {slots.map((slot, index) => (
-          <div key={index}>
+          <div key={index} className={styles.slotRow}>
             <input
+              className={styles.input}
               type="datetime-local"
               value={slot.datetime}
               onChange={(e) => handleSlotChange(index, "datetime", e.target.value)}
               required
             />
             <input
+              className={styles.input}
               type="number"
               value={slot.max_bookings}
               onChange={(e) => handleSlotChange(index, "max_bookings", e.target.value)}
@@ -60,9 +78,11 @@ function CreateEventPage() {
             />
           </div>
         ))}
-        <button type="button" onClick={addSlot}>Add Slot</button>
+        <button type="button" className={styles.addButton} onClick={addSlot}>
+          Add Slot
+        </button>
         <br />
-        <button type="submit">Create Event</button>
+        <button type="submit" className={styles.submitButton}>Create Event</button>
       </form>
     </div>
   );

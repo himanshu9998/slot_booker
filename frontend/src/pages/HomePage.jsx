@@ -3,27 +3,21 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/events`)
-      .then(res => setEvents(res.data))
-      .catch(() => setEvents([]));
-  }, []);
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Upcoming Events</h2>
-      {events.length === 0 && <p>No events found.</p>}
-      {events.map(event => (
-        <div key={event.id} style={{ border: "1px solid #ccc", padding: "15px", margin: "10px 0" }}>
-          <h3>{event.title}</h3>
-          <p>{event.description}</p>
-          <p><strong>Time Zone:</strong> {event.timezone}</p>
-          <p><strong>Created By:</strong> {event.creatorEmail}</p>
-          <Link to={`/events/${event.uuid}`}>View & Book Slots</Link>
-        </div>
-      ))}
+    <div style={{ padding: "40px", textAlign: "center" }}>
+      <h1>Welcome to Slot Booker</h1>
+      <p style={{ fontSize: "18px", marginTop: "10px" }}>
+        A simple tool to create events, manage time slots, and allow easy public bookings.
+      </p>
+
+      <div style={{ marginTop: "30px" }}>
+        <Link to="/signup">
+          <button style={{ marginRight: "20px", padding: "10px 20px", fontSize: "16px" }}>Sign Up</button>
+        </Link>
+        <Link to="/login">
+          <button style={{ padding: "10px 20px", fontSize: "16px" }}>Log In</button>
+        </Link>
+      </div>
     </div>
   );
 };

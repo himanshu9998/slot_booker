@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: 56645b269203
+Revision ID: ae0707f39e56
 Revises: 
-Create Date: 2025-06-21 00:44:29.307394
+Create Date: 2025-06-22 00:57:48.683028
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '56645b269203'
+revision = 'ae0707f39e56'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,9 +22,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
-    sa.Column('password_hash', sa.String(length=128), nullable=False),
+    sa.Column('password_hash', sa.String(length=256), nullable=False),
     sa.Column('is_verified', sa.Boolean(), nullable=True),
-    sa.Column('verification_token', sa.String(length=64), nullable=True),
+    sa.Column('verification_token', sa.String(length=256), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
     )
@@ -50,11 +50,13 @@ def upgrade():
     )
     op.create_table('booking',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('slot_id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['slot_id'], ['time_slot.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('slot_id', 'email', name='_slot_email_uc')
     )

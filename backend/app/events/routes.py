@@ -7,6 +7,39 @@ from datetime import datetime
 
 event_bp = Blueprint("events", __name__, url_prefix="/api/events")
 
+@event_bp.route('/<string:uuid>', methods=['GET'])
+def get_event_details(uuid):
+    event = Event.query.filter_by(uuid=uuid).first()
+    if not event:
+        return jsonify({'error': 'Event not found'}), 404
+
+    slots = [{
+        'id': slot.id,
+        'datetime_utc': slot.datetime_utc.isoformat(),
+        'max_bookings': slot.max_bookings,
+        'current_bookings': len(slot.bookings)
+    } for slot in event.slots]
+
+    return jsonify({
+        'title': event.title,
+        'description': event.description,
+        'uuid': event.uuid,
+        'timezone': event.timezone,
+        'slots': slots
+    })
+
+@event_bp.route('/public', methods=['GET'])
+def list_public_events():
+    events = Event.query.all()
+    event_list = [{
+        'id': event.id,
+        'title': event.title,
+        'description': event.description,
+        'uuid': event.uuid,
+        'timezone': event.timezone,
+        'created_at': event.created_at.isoformat()
+    } for event in events]
+    return jsonify({'events': event_list})
 
 @event_bp.route("/create", methods=["POST"])
 @jwt_required()

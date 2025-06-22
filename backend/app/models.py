@@ -3,7 +3,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 
-from app.extensions import db
+from backend.app.extensions import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

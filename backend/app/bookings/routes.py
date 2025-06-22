@@ -3,8 +3,8 @@ from flask import Blueprint, request, jsonify
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
-from app.extensions import db
-from app.models import TimeSlot, Booking
+from backend.app.extensions import db
+from backend.app.models import TimeSlot, Booking
 
 booking_bp = Blueprint("bookings", __name__, url_prefix="/api/bookings")
 

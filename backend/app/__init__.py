@@ -11,7 +11,7 @@ from backend.app.bookings.routes import booking_bp
 
 
 # Extensions
-from app.extensions import db, migrate, mail, jwt
+from backend.app.extensions import db, migrate, mail, jwt
 
 
 def create_app():

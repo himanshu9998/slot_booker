@@ -1,8 +1,8 @@
 # app/events/routes.py
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import Event, TimeSlot, User
-from app.extensions import db
+from backend.app.models import Event, TimeSlot, User
+from backend.app.extensions import db
 from datetime import datetime
 
 event_bp = Blueprint("events", __name__, url_prefix="/api/events")

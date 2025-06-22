@@ -20,7 +20,7 @@ def create_app():
 
     # ── Config ────────────────────────────────────────────
     app.config.from_object("backend.app.config.Config")          # your Config class
-    CORS(app, origins=["https://slot-booker-fe.onrender.com"])          # allow Vite frontend
+    CORS(app, origins=["https://slot-booker-fe.onrender.com"], supports_credentials=True) # allow Vite frontend
 
     # ── Init extensions ──────────────────────────────────
     db.init_app(app)

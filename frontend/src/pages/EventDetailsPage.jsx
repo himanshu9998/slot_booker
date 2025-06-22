@@ -15,7 +15,7 @@ const EventDetailsPage = () => {
   const loadEvent = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/events/${uuid}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/events/${uuid}`
       );
 
       // keep your existing structure

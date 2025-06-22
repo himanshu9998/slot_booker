@@ -22,7 +22,7 @@ function CreateEventPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/events/create",
+        "`${import.meta.env.VITE_API_BASE_URL}/api/create",
         { title, description, timezone, slots },
         { headers: { Authorization: `Bearer ${token}` } }
       );

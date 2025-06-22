@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // ✅ import Link
 import axios from 'axios';
 import styles from './PublicEventsPage.module.css';
 
@@ -17,9 +18,10 @@ function PublicEventsPage() {
       <ul className={styles.eventList}>
         {events.map(event => (
           <li key={event.uuid} className={styles.eventItem}>
-            <a href={`/event/${event.uuid}`} className={styles.eventLink}>
+            {/* ✅ use Link to enable SPA navigation */}
+            <Link to={`/events/${event.uuid}`} className={styles.eventLink}>
               {event.title}
-            </a>
+            </Link>
             <span className={styles.eventDescription}> — {event.description}</span>
           </li>
         ))}

@@ -3,21 +3,27 @@ services:
     name: slot-booker-backend
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r backend/requirements.txt
     startCommand: gunicorn backend.wsgi:app
     envVars:
       - key: FLASK_ENV
-        value: backend
-      - key: himanshu123
-        value: himanshu123
-      - key: postgresql://postgres:WapibbdjCpIgKsrptZhXNBcCxomWbCSo@maglev.proxy.rlwy.net:34649/railway
+        value: production
+
+      - key: DATABASE_URL
+        value: postgresql://postgres:WapibbdjCpIgKsrptZhXNBcCxomWbCSo@maglev.proxy.rlwy.net:34649/railway
         fromDatabase:
           name: slot-booker-db
           property: connectionString
+
       - key: MAIL_USERNAME
         value: your-email@example.com
+
       - key: MAIL_PASSWORD
         value: your-email-password
+
+      - key: PYTHONPATH
+        value: backend
+
     autoDeploy: true
     buildFilter:
       paths:

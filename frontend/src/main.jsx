@@ -22,7 +22,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/create" element={<Create />} />
         <Route path="/public" element={<Public />} />
-        <Route path="/event/:uuid" element={<EventDetails />} />
+        <Route path="/events/:uuid" element={<EventDetails />} />
         <Route path="/home" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

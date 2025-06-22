@@ -21,7 +21,7 @@ function CreateEventPage() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/events/create`,
         { title, description, timezone, slots },
         { headers: { Authorization: `Bearer ${token}` } }

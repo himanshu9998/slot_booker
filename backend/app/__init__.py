@@ -19,7 +19,7 @@ def create_app():
     app = Flask(__name__)
 
     # ── Config ────────────────────────────────────────────
-    app.config.from_object("backend.app.config.Config")          # your Config class
+    app.config.from_object("app.config.Config")          # your Config class
     CORS(app, origins=["http://localhost:5174"])          # allow Vite frontend
 
     # ── Init extensions ──────────────────────────────────

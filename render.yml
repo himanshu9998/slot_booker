@@ -7,7 +7,7 @@ services:
     startCommand: gunicorn backend.wsgi:app
     envVars:
       - key: FLASK_ENV
-        value: production
+        value: backend
       - key: himanshu123
         value: himanshu123
       - key: postgresql://postgres:WapibbdjCpIgKsrptZhXNBcCxomWbCSo@maglev.proxy.rlwy.net:34649/railway

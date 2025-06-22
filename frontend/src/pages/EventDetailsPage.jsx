@@ -10,7 +10,7 @@ function EventDetailsPage() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/events/${uuid}`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/events/${uuid}`)
       .then((res) => {
         console.log("Event response:", res.data); // ✅ Debug log
         setEvent(res.data);

@@ -1,26 +1,40 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import styles from './PublicEventsPage.module.css';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import styles from "./EventDetailPage.module.css";
 
-function PublicEventsPage() {
-  const [events, setEvents] = useState([]);
+function EventDetailPage() {
+  const { uuid } = useParams();
+  const [event, setEvent] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/events/public`)
-      .then(res => setEvents(res.data.events))
-      .catch(err => console.error('Error fetching events:', err));
-  }, []);
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/events/${uuid}`)
+      .then((res) => setEvent(res.data))
+      .catch((err) => {
+        console.error("Failed to fetch event:", err);
+        setError("Event not found or failed to load.");
+      });
+  }, [uuid]);
+
+  if (error) return <div className={styles.error}>{error}</div>;
+
+  if (!event) return <div className={styles.loading}>Loading event...</div>;
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>Public Events</h2>
-      <ul className={styles.eventList}>
-        {events.map(event => (
-          <li key={event.uuid} className={styles.eventItem}>
-            <a href={`/event/${event.uuid}`} className={styles.eventLink}>
-              {event.title}
-            </a>
-            <span className={styles.eventDescription}> — {event.description}</span>
+      <h2 className={styles.title}>{event.title}</h2>
+      <p className={styles.description}>{event.description}</p>
+      <p className={styles.timezone}>Timezone: {event.timezone}</p>
+
+      <h3 className={styles.subheading}>Available Slots</h3>
+      <ul className={styles.slotList}>
+        {event.slots.map((slot) => (
+          <li key={slot.id} className={styles.slotItem}>
+            <strong>{new Date(slot.datetime_utc).toLocaleString()}</strong><br />
+            Max Bookings: {slot.max_bookings}<br />
+            Current Bookings: {slot.current_bookings}
           </li>
         ))}
       </ul>
@@ -28,4 +42,4 @@ function PublicEventsPage() {
   );
 }
 
-export default PublicEventsPage;
+export default EventDetailPage;

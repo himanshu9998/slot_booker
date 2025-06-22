@@ -32,7 +32,7 @@ function CreateEventPage() {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/events/create`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/events/create`,
         { title, description, timezone, slots: processedSlots },
         { headers: { Authorization: `Bearer ${token}` } }
       );

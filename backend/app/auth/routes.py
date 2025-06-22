@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from app.models import User
-from app.extensions import db
+from backend.app.models import User
+from backend.app.extensions import db
 import jwt
 import datetime
 import os

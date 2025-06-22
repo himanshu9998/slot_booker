@@ -34,3 +34,6 @@ def create_app():
     app.register_blueprint(booking_bp, url_prefix="/api/bookings")
 
     return app
+
+app = create_app()
+

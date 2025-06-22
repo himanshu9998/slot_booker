@@ -19,8 +19,15 @@ def create_app():
     app = Flask(__name__)
 
     # ── Config ────────────────────────────────────────────
-    app.config.from_object("backend.app.config.Config")          # your Config class
-    CORS(app, origins=["https://slot-booker-fe.onrender.com"], supports_credentials=True) # allow Vite frontend
+
+    CORS(app,
+             origins=["https://slot-booker-fe.onrender.com"],
+             supports_credentials=True,
+             methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             allow_headers=["Content-Type", "Authorization"]
+        )
+     app.config.from_object("backend.app.config.Config")          # your Config class
+
 
     # ── Init extensions ──────────────────────────────────
     db.init_app(app)

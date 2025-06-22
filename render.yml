@@ -4,13 +4,13 @@ services:
     env: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: gunicorn backend.app:app # <--- THIS IS THE CHANGE
+    startCommand: gunicorn backend.app:app # <--- Make sure it's this exact line
     envVars:
       - key: FLASK_ENV
         value: production
 
       - key: DATABASE_URL
-        value: postgresql://postgres:WapibbdjCpIgKsrptZhXNBcCxomWbCSo@maglev.proxy.rlwy.net:34649/railway
+        value: postgresql://postgres:WapibbdjCpXIgKsrptZhXNBcCxomWbCSo@maglev.proxy.rlwy.net:34649/railway
         fromDatabase:
           name: slot-booker-db
           property: connectionString
@@ -22,7 +22,7 @@ services:
         value: your-email-password
 
       - key: PYTHONPATH
-        value: backend
+        value: backend # This is important to ensure 'backend' is on the path
 
     autoDeploy: true
     buildFilter:

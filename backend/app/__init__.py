@@ -5,9 +5,10 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 
 # Blueprints
-from app.auth.routes import auth_bp
-from app.events.routes import event_bp
-from app.bookings.routes import booking_bp
+from backend.app.auth.routes import auth_bp
+from backend.app.events.routes import event_bp
+from backend.app.bookings.routes import booking_bp
+
 
 # Extensions
 from app.extensions import db, migrate, mail, jwt

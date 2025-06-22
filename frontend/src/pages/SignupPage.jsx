@@ -1,54 +1,72 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import styles from './SignupPage.module.css';
 
-function SignupPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const SignupPage = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
 
     try {
-      const response = await axios.post(
-        'https://slot-booker.onrender.com/api/auth/signup',
-        { email, password },
-        {
-          withCredentials: true,  // important if you use cookies/sessions
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      setMessage('Signup successful! Please check your email.');
-      console.log(response.data);
-    } catch (error) {
-      console.error('Signup error:', error);
-      setMessage('Signup failed. Please try again.');
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, formData);
+      setMessage('Signup successful! Redirecting...');
+      setTimeout(() => navigate('/login'), 1500);
+    } catch (err) {
+      console.error(err);
+      setMessage(err.response?.data?.error || 'Signup failed');
     }
   };
 
   return (
-    <form onSubmit={handleSignup}>
-      <input
-        type="email"
-        value={email}
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <button type="submit">Sign Up</button>
-      <p>{message}</p>
-    </form>
+    <div className={styles.container}>
+      <form className={styles.card} onSubmit={handleSubmit}>
+        <h2 className={styles.title}>Sign Up</h2>
+
+        <input
+          className={styles.input}
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          className={styles.input}
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          className={styles.input}
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+
+        <button className={styles.button} type="submit">Create Account</button>
+
+        {message && <p className={styles.message}>{message}</p>}
+      </form>
+    </div>
   );
-}
+};
 
 export default SignupPage;

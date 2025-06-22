@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./EventDetailsPage.module.css";
 
-function EventDetailPage() {
+function EventDetailsPage() {
   const { uuid } = useParams();
   const [event, setEvent] = useState(null);
   const [error, setError] = useState("");
@@ -11,7 +11,10 @@ function EventDetailPage() {
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/api/events/${uuid}`)
-      .then((res) => setEvent(res.data))
+      .then((res) => {
+        console.log("Event response:", res.data); // ✅ Debug log
+        setEvent(res.data);
+      })
       .catch((err) => {
         console.error("Failed to fetch event:", err);
         setError("Event not found or failed to load.");
@@ -30,7 +33,7 @@ function EventDetailPage() {
 
       <h3 className={styles.subheading}>Available Slots</h3>
       <ul className={styles.slotList}>
-        {event.slots.map((slot) => (
+        {event.slots?.map((slot) => (
           <li key={slot.id} className={styles.slotItem}>
             <strong>{new Date(slot.datetime_utc).toLocaleString()}</strong><br />
             Max Bookings: {slot.max_bookings}<br />
@@ -42,4 +45,4 @@ function EventDetailPage() {
   );
 }
 
-export default EventDetailPage;
+export default EventDetailsPage;

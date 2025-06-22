@@ -10,7 +10,7 @@ from flask import current_app, url_for
 from flask_jwt_extended import create_access_token
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
-@app.route('/auth/signup', methods=['GET', 'POST'])
+@auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
     name = data.get('name')

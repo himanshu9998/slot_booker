@@ -6,7 +6,7 @@ function PublicEventsPage() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    axios.get('`${import.meta.env.VITE_API_BASE_URL}/api/events/public')
+    axios.get('`${import.meta.env.VITE_API_BASE_URL}/api/public')
       .then(res => setEvents(res.data.events))
       .catch(err => console.error('Error fetching events:', err));
   }, []);

@@ -32,7 +32,8 @@ def create_app():
     migrate.init_app(app, db)
     mail.init_app(app)
     jwt.init_app(app)
-
+    with app.app_context():
+        db.create_all()
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(event_bp, url_prefix="/api/events")

@@ -17,7 +17,7 @@ const SignupPage = () => {
     setMessage('');
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, formData);
+      axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`, formData)
       setMessage('Signup successful! Redirecting...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
